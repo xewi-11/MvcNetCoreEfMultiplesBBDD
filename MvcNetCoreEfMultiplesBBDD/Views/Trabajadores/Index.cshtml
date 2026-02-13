@@ -1,0 +1,75 @@
+﻿@model List<V_Empleado>
+
+@{
+    ViewData["Title"] = "Index";
+    List<string> oficios = ViewData["OFICIOS"] as List<string>;
+}
+
+<h1>Index</h1>
+
+<form method="post">
+    <select name="oficio">
+        <option value="">-- Select an oficio --</option>
+        @foreach (var oficio in oficios)
+        {
+            <option value="@oficio">@oficio</option>
+        }
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+<br />
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            
+            <th>
+                Emp No
+            </th>
+            <th>
+                Dept_No
+            </th>
+            <th>
+                Apellido
+            </th>
+            <th>
+                Oficio
+            </th>
+            <th>
+                Salario
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.Emp_No)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Dept_No)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Apellido)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Oficio)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Salario)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { emp_no=item.Emp_No }) |
+                @Html.ActionLink("Details", "Details", new { emp_no=item.Emp_No }) |
+                @Html.ActionLink("Delete", "Delete", new { emp_no=item.Emp_No })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
