@@ -4,14 +4,24 @@ using MvcNetCoreEfMultiplesBBDD.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-builder.Services.AddTransient<IRepositoryEmpleados, RepositoryEmpleadosSqlServer>();
+//-------------------------------------------Oracle------------------------------------------------------------
 builder.Services.AddTransient<IRepositoryEmpleados, RepositoryEmpleadosOracle>();
-builder.Services.AddTransient<IRepositoryEmpleados, RepositoryEmpleadosMySql>();
-//builder.Services.AddDbContext<HospitalContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlHospital")));
 //builder.Services.AddDbContext<HospitalContext>(options => options.UseOracle(builder.Configuration.GetConnectionString("oracleHospital")));
+
+
+//-------------------------------------------SqlServer------------------------------------------------------------
+builder.Services.AddTransient<IRepositoryEmpleados, RepositoryEmpleadosSqlServer>();
+
+//builder.Services.AddDbContext<HospitalContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("SqlHospital")));
+
+//-------------------------------------------MySql------------------------------------------------------------
+builder.Services.AddTransient<IRepositoryEmpleados, RepositoryEmpleadosMySql>();
 builder.Services.AddDbContext<HospitalContext>(options => options.UseMySQL(builder.Configuration.GetConnectionString("MySqlHospital")));
+
+// Add services to the container.
+
+
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
