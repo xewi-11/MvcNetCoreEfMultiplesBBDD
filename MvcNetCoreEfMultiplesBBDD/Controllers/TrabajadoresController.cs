@@ -6,8 +6,8 @@ namespace MvcNetCoreEfMultiplesBBDD.Controllers
 {
     public class TrabajadoresController : Controller
     {
-        public RepositoryTrabajadores repo;
-        public TrabajadoresController(RepositoryTrabajadores repo)
+        public IRepositoryEmpleados repo;
+        public TrabajadoresController(IRepositoryEmpleados repo)
         {
             this.repo = repo;
         }
