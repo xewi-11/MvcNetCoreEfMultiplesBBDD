@@ -38,7 +38,7 @@ namespace MvcNetCoreEfMultiplesBBDD.Repositories
 
         public async Task<List<V_Empleado>> GetEmpleadosAsync()
         {
-            string sql = $"SP_ALL_VEMPLEADOS";
+            string sql = "SP_ALL_VEMPLEADOS";
             var consulta = this.context.VistaEmpleados.FromSqlRaw(sql);
             List<V_Empleado> empleados = await consulta.ToListAsync();
             return empleados;
