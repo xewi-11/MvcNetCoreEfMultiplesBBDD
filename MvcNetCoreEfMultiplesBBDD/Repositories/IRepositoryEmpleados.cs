@@ -8,5 +8,6 @@ namespace MvcNetCoreEfMultiplesBBDD.Repositories
         Task<V_Empleado> GetDetailsEmpleadoByIdAsync(int emp_no);
         Task<List<string>> GetOficiosAsync();
         Task<List<V_Empleado>> GetEmpleadosPorOficioAsync(string oficio);
+        Task<int> InsertEmpleadoAsync(string apellido, string oficio, int director, int salario, int comision, string departamento);
     }
 }

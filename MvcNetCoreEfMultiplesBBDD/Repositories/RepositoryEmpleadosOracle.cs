@@ -2,6 +2,7 @@
 using MvcNetCoreEfMultiplesBBDD.Data;
 using MvcNetCoreEfMultiplesBBDD.Models;
 using Oracle.ManagedDataAccess.Client;
+using Oracle.ManagedDataAccess.Types;
 using System.Data;
 
 namespace MvcNetCoreEfMultiplesBBDD.Repositories
@@ -27,6 +28,47 @@ namespace MvcNetCoreEfMultiplesBBDD.Repositories
     //BEGIN
     //  open p_cursor_empleados for select* from V_EMPLEADOS;
     //end;
+
+    //    CREATE OR REPLACE PROCEDURE SP_INSERT_EMP
+    //(
+    //  p_apellido IN  EMP.APELLIDO%TYPE,
+    //  p_oficio IN  EMP.OFICIO%TYPE,
+    //  p_dir IN  EMP.DIR%TYPE,
+    //  p_salario IN  EMP.SALARIO%TYPE,
+    //  p_comision IN  EMP.COMISION%TYPE,
+    //  p_departamento IN  DEPT.DNOMBRE%TYPE,
+    //  p_emp_no OUT EMP.EMP_NO%TYPE
+    //)
+    //AS
+    //  v_dept_no   DEPT.DEPT_NO%TYPE;
+    //  v_fecha_alt EMP.FECHA_ALT%TYPE;
+    //    BEGIN
+
+    //  -- Obtener departamento
+    //  SELECT DEPT_NO
+    //  INTO v_dept_no
+    //  FROM DEPT
+    //  WHERE DNOMBRE = p_departamento;
+
+    //  -- Generar nuevo ID(mejor usar SEQUENCE en producción)
+    //  SELECT NVL(MAX(EMP_NO),0) + 1
+    //  INTO p_emp_no
+    //  FROM EMP;
+
+    //    v_fecha_alt := SYSDATE;
+
+    //  -- Insertar empleado
+    //  INSERT INTO EMP
+    //  VALUES(p_emp_no,
+    //          p_apellido,
+    //          p_oficio,
+    //          p_dir,
+    //          v_fecha_alt,
+    //          p_salario,
+    //          p_comision,
+    //          v_dept_no);
+
+    //    END;
 
     #endregion
     public class RepositoryEmpleadosOracle : IRepositoryEmpleados
@@ -75,6 +117,37 @@ namespace MvcNetCoreEfMultiplesBBDD.Repositories
                            where datos.Oficio == oficio
                            select datos;
             return await consulta.ToListAsync();
+        }
+
+        public async Task<int> InsertEmpleadoAsync(string apellido, string oficio, int director, int salario, int comision, string departamento)
+        {
+            string sql = "BEGIN SP_INSERT_EMP( :apellido, :oficio, :dir, :salario, :comision, :departamento, :emp_no); END;";
+            OracleParameter pamApellido = new OracleParameter(":apellido", apellido);
+            OracleParameter pamOficio = new OracleParameter(":oficio", oficio);
+            OracleParameter pamDir = new OracleParameter(":dir", director);
+            OracleParameter pamSalario = new OracleParameter(":salario", salario);
+            OracleParameter pamComision = new OracleParameter(":comision", comision);
+            OracleParameter pamDepart = new OracleParameter(":departamento", departamento);
+
+            // 🔹 Parámetro de salida
+            OracleParameter pamEmpNo = new OracleParameter(":emp_no", OracleDbType.Int32);
+            pamEmpNo.Direction = ParameterDirection.Output;
+
+            await this.context.Database.ExecuteSqlRawAsync(
+                sql,
+                pamApellido,
+                pamOficio,
+                pamDir,
+                pamSalario,
+                pamComision,
+                pamDepart,
+                pamEmpNo
+                );
+
+            // 🔹 Recuperar el valor
+            OracleDecimal oracleNumber = (OracleDecimal)pamEmpNo.Value;
+            return oracleNumber.ToInt32();
+
         }
     }
 }

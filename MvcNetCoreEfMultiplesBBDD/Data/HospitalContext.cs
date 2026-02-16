@@ -9,5 +9,7 @@ namespace MvcNetCoreEfMultiplesBBDD.Data
         {
         }
         public DbSet<V_Empleado> VistaEmpleados { get; set; }
+
+        public DbSet<Empleado> tablaEmp { get; set; }
     }
 }

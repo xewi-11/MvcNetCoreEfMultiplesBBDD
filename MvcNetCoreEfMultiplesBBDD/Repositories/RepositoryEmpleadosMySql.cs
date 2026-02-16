@@ -72,5 +72,10 @@ namespace MvcNetCoreEfMultiplesBBDD.Repositories
                            select datos;
             return await consulta.ToListAsync();
         }
+
+        public Task<int> InsertEmpleadoAsync(string apellido, string oficio, int director, int salario, int comision, string departamento)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

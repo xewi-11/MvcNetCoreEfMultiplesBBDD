@@ -30,7 +30,24 @@ namespace MvcNetCoreEfMultiplesBBDD.Controllers
         public async Task<IActionResult> Details(int emp_no)
         {
             V_Empleado model = await this.repo.GetDetailsEmpleadoByIdAsync(emp_no);
+            if (model == null)
+            {
+                return NotFound();
+            }
             return View(model);
+        }
+
+        public async Task<IActionResult> Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Create(Empleado emp)
+        {
+            int emp_no = await this.repo.InsertEmpleadoAsync(emp.apellido, emp.oficio, emp.dir, emp.salario, emp.comision, emp.departamento);
+
+            return RedirectToAction("Details", new { emp_no = emp_no });
         }
     }
 }
